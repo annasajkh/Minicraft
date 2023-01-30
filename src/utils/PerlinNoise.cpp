@@ -5,7 +5,7 @@
 #include <array>
 #include <random>
 
-//perlin noise tutorial i follow to make this https://rtouti.github.io/graphics/perlin-noise-algorithm
+//perlin noise tutorial i follow https://rtouti.github.io/graphics/perlin-noise-algorithm
 
 static float fade(float t){
 	return ((6*t - 15)*t + 10)*t*t*t;
@@ -69,7 +69,7 @@ float PerlinNoise::noise2d(float x, float y) const
     float xf = x - std::floor(x);
     float yf = y - std::floor(y);
 
-    //construvt the square
+    //construct the square
     Vector2 topRight(xf - 1.0f, yf - 1.0f);
     Vector2 topLeft(xf, yf - 1.0f);
     Vector2 bottomRight(xf - 1.0f, yf);
