@@ -86,7 +86,7 @@ float PerlinNoise::noise2d(float x, float y) const
     float dotBottomLeft = bottomLeft.dot(getConstantVector(valueBottomLeft));
     
     float u = fade(xf);
-	float v = fade(yf);
+    float v = fade(yf);
 
     return std::lerp(std::lerp(dotBottomLeft, dotTopLeft, v), std::lerp(dotBottomRight, dotTopRight, v), u);
 }
