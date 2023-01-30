@@ -5,6 +5,7 @@
 #include <array>
 #include <random>
 
+//perlin noise tutorial i follow to make this https://rtouti.github.io/graphics/perlin-noise-algorithm
 
 static float fade(float t){
 	return ((6*t - 15)*t + 10)*t*t*t;
