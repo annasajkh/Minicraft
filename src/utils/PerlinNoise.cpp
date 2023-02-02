@@ -14,13 +14,20 @@ static float fade(float t){
 PerlinNoise::PerlinNoise(uint32_t seed)
     : seed(seed)
 {
+    std::array<uint8_t, 256> tableChunk;
+
+    for (size_t i = 0; i < tableChunk.size(); i++)
+    {
+        tableChunk[i] = static_cast<uint8_t>(i);
+    }
     
-    for(size_t i = 0; i < 512; i++){
-        permutationTable[i] = static_cast<uint16_t>(i % 256);
+    std::shuffle(tableChunk.begin(), tableChunk.end(), std::default_random_engine(seed));
+
+    for(size_t i = 0; i < permutationTable.size(); i++){
+        permutationTable[i] = static_cast<uint16_t>(tableChunk[i % 256]);
     }
 
     
-    std::shuffle(permutationTable.begin(), permutationTable.end(), std::default_random_engine(seed));
 }
 
  void PerlinNoise::setSeed(uint32_t seed)
@@ -32,7 +39,7 @@ PerlinNoise::PerlinNoise(uint32_t seed)
 Vector2 PerlinNoise::getConstantVector(uint16_t v) const
 {
     //v is the value from the permutation table
-	uint16_t h = v & 3;
+	uint16_t h = v % 3;
 
 	if(h == 0)
     {
@@ -55,8 +62,8 @@ Vector2 PerlinNoise::getConstantVector(uint16_t v) const
 float PerlinNoise::noise2d(float x, float y) const
 {
     //cap the x and y value to be between 0 - 255
-    uint16_t X = static_cast<uint16_t>(std::floor(x)) & 255;
-    uint16_t Y = static_cast<uint16_t>(std::floor(y)) & 255;
+    uint16_t X = static_cast<uint16_t>(std::floor(x)) % 255;
+    uint16_t Y = static_cast<uint16_t>(std::floor(y)) % 255;
 
 
     //get the float reminder
