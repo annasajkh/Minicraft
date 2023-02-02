@@ -2,7 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <utils/constants.hpp>
 #include <iostream>
+#include <utils/PerlinNoise.hpp>
 
+extern PerlinNoise perlinNoise;
 
 
 Chunk::Chunk(const sf::Vector2f& position)
@@ -12,25 +14,31 @@ Chunk::Chunk(const sf::Vector2f& position)
     {
         for(size_t j = 0; j < blocks[0].size(); j++)
         {
-            blocks[i][j] = std::make_shared<Block>(sf::Vector2f(static_cast<float>(j * blockSize),
-                                                                static_cast<float>(i * blockSize)),
+            sf::Uint8 noiseValue = static_cast<sf::Uint8>(perlinNoise.noise2d(position.x + static_cast<float>(j) / static_cast<float>(blockSize),
+                                                                              position.y + static_cast <float>(i) / static_cast<float>(blockSize)) * 255.0f);
+
+            blocks[i][j] = std::make_shared<Block>(sf::Vector2f(position.x + static_cast<float>(j * blockSize),
+                                                                position.y + static_cast<float>(i * blockSize)),
                                                                 sf::Vector2f(blockSize, blockSize),
-                                                                sf::Color(rand() % 255, rand() % 255, rand() % 255));
+                                                                sf::Color(noiseValue, noiseValue, noiseValue));
 
             
             const sf::VertexArray& blockVertices = blocks[i][j]->getVertices();
+            sf::Vertex* quad = &vertices[(i + j * chunkSize) * 4];
 
-            vertices.append(blockVertices[0]);
-            vertices.append(blockVertices[1]);
-            vertices.append(blockVertices[2]);
-            vertices.append(blockVertices[3]);
+            quad[0] = blockVertices[0];
+            quad[1] = blockVertices[1];
+            quad[2] = blockVertices[2];
+            quad[3] = blockVertices[3];
         }
         
     }
-
-    std::cout << "Vertex Count: " << vertices.getVertexCount() << std::endl;
-    std::cout << "Block Count: " << chunkSize * chunkSize << std::endl;
     
+}
+
+const sf::VertexArray& Chunk::getVertices()
+{
+    return vertices;
 }
 
 void Chunk::update(float delta)
@@ -40,14 +48,18 @@ void Chunk::update(float delta)
         for(size_t j = 0; j < blocks[0].size(); j++)
         {
             blocks[i][j]->update(delta);
+
+
+            const sf::VertexArray& blockVertices = blocks[i][j]->getVertices();
+            sf::Vertex* quad = &vertices[(i + j * chunkSize) * 4];
+
+            quad[0] = blockVertices[0];
+            quad[1] = blockVertices[1];
+            quad[2] = blockVertices[2];
+            quad[3] = blockVertices[3];
         }
         
     }
-}
-
-void Chunk::draw(sf::RenderWindow& window)
-{
-    window.draw(vertices);
 }
 
 Chunk::~Chunk()

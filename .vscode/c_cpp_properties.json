@@ -4,8 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/libs/SFML/include"
+                "${workspaceFolder}/libs/SFML/include",
+                "${workspaceFolder}/include"
             ],
             "defines": [
                 "_DEBUG",

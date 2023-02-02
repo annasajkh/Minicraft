@@ -23,7 +23,7 @@ class PerlinNoise
 {
 private:
     uint32_t seed;
-    std::array<uint8_t, 256>permutationTable;
+    std::array<uint16_t, 512>permutationTable;
 public:
     PerlinNoise(uint32_t seed);
     ~PerlinNoise();
@@ -31,5 +31,5 @@ public:
     void setSeed(uint32_t seed);
 
     float noise2d(float x, float y) const;
-    Vector2 getConstantVector(uint8_t v) const;
+    Vector2 getConstantVector(uint16_t v) const;
 };

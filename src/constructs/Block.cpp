@@ -11,7 +11,7 @@ Block::Block(const sf::Vector2f& position, const sf::Vector2f& size, const sf::C
 
 void Block::update(float delta) 
 {
-    // setColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+    
 }
 
 Block::~Block()

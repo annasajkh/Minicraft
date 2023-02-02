@@ -16,7 +16,6 @@ const sf::VertexArray& Rectangle::getVertices()
     vertices[2] = sf::Vertex(sf::Vector2f(position.x + size.x - origin.x, position.y - origin.y), color);
     vertices[3] = sf::Vertex(sf::Vector2f(position.x + size.x - origin.x, position.y + size.y - origin.y), color);
     
-    
     return vertices;
 }
 

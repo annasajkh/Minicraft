@@ -8,26 +8,19 @@
 //perlin noise tutorial i follow https://rtouti.github.io/graphics/perlin-noise-algorithm
 
 static float fade(float t){
-	return ((6*t - 15)*t + 10)*t*t*t;
+	return ((6*t - 15) * t + 10) * t * t * t;
 }
 
 PerlinNoise::PerlinNoise(uint32_t seed)
     : seed(seed)
 {
-    for(uint8_t i = 0; i < 256; i++){
-        permutationTable[i] = i;
+    
+    for(size_t i = 0; i < 512; i++){
+        permutationTable[i] = static_cast<uint16_t>(i % 256);
     }
 
     
     std::shuffle(permutationTable.begin(), permutationTable.end(), std::default_random_engine(seed));
-
-    std::cout << "[ ";
-
-    for(uint8_t i = 0; i < 256; i++){
-        std::cout << permutationTable[i] << ",";
-    }
-
-    std::cout << " ]";
 }
 
  void PerlinNoise::setSeed(uint32_t seed)
@@ -36,10 +29,10 @@ PerlinNoise::PerlinNoise(uint32_t seed)
  }
 
 
-Vector2 PerlinNoise::getConstantVector(uint8_t v) const
+Vector2 PerlinNoise::getConstantVector(uint16_t v) const
 {
     //v is the value from the permutation table
-	uint8_t h = v & 3;
+	uint16_t h = v & 3;
 
 	if(h == 0)
     {
@@ -62,8 +55,9 @@ Vector2 PerlinNoise::getConstantVector(uint8_t v) const
 float PerlinNoise::noise2d(float x, float y) const
 {
     //cap the x and y value to be between 0 - 255
-    uint8_t X = static_cast<int>(std::floor(x)) & 255;
-    uint8_t Y = static_cast<int>(std::floor(y)) & 255;
+    uint16_t X = static_cast<uint16_t>(std::floor(x)) & 255;
+    uint16_t Y = static_cast<uint16_t>(std::floor(y)) & 255;
+
 
     //get the float reminder
     float xf = x - std::floor(x);
@@ -75,16 +69,17 @@ float PerlinNoise::noise2d(float x, float y) const
     Vector2 bottomRight(xf - 1.0f, yf);
     Vector2 bottomLeft(xf, yf);
 
-    uint8_t valueTopRight = permutationTable[permutationTable[X+1]+Y+1];
-    uint8_t valueTopLeft = permutationTable[permutationTable[X]+Y+1];
-    uint8_t valueBottomRight = permutationTable[permutationTable[X+1]+Y];
-    uint8_t valueBottomLeft = permutationTable[permutationTable[X]+Y];
+
+    uint16_t valueTopRight = permutationTable[(permutationTable[X+1]+Y+1)];
+    uint16_t valueTopLeft = permutationTable[(permutationTable[X]+Y+1)];
+    uint16_t valueBottomRight = permutationTable[(permutationTable[X+1]+Y)];
+    uint16_t valueBottomLeft = permutationTable[(permutationTable[X]+Y)];
 
     float dotTopRight = topRight.dot(getConstantVector(valueTopRight));
     float dotTopLeft = topLeft.dot(getConstantVector(valueTopLeft));
     float dotBottomRight = bottomRight.dot(getConstantVector(valueBottomRight));
     float dotBottomLeft = bottomLeft.dot(getConstantVector(valueBottomLeft));
-    
+
     float u = fade(xf);
     float v = fade(yf);
 
